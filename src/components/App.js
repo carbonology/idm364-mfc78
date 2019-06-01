@@ -9,8 +9,6 @@ class Menu extends Component {
     state = { menuData }
 
     resetMenu = () => {
-        console.log('here');
-        console.log(menuData);
         this.setState({ menuData });
     }
 
