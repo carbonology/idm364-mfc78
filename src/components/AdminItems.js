@@ -4,8 +4,8 @@ class items extends Component{
     render(){
         const list = this.props.data["items"].map((item, index) => {
             return(
-                <div data-index={index}>
-                    <h1 key={index}>Edit title: {item.title}</h1>
+                <div data-index={index} key={index}>
+                    <h1>Edit title: {item.title}</h1>
                     <input type="text" placeholder={item.title} id={`title${index}`}></input>
                     <button onClick={() => {
                             this.props.editMenu(

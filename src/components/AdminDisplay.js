@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import AdminItems from './AdminItems';
+import config from '../config';
 
 class AdminDisplay extends Component {
     render(){
+        document.title = `${config.title} | Admin`;
+
         return(
             <>
                 <AdminItems data={this.props.data} editMenu={this.props.editMenu} />
