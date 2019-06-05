@@ -6,9 +6,7 @@ import money from './money';
 
 class MenuDisplay extends Component{
     addToCart = (price, index) => {
-        this.props.editCartCount(true);
-        this.props.adjustTotal(true, price);
-        this.props.editCart(index);
+        this.props.addItemToCart(index);
     }
 
     itemCountDisplay = () => {

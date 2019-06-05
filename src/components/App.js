@@ -1,116 +1,109 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
-import menuData from './menu-data';
+import initalData from './menu-data';
 import MenuDisplay from './MenuDisplay';
 import AdminDisplay from './AdminDisplay';
 import CartDisplay from './CartDisplay';
 
 class Menu extends Component {
     state = { 
-        menuData,
-        cartItems: [],
+        menuData: initalData,
         totalPrice: 0.0,
         cartCount: 0
     }
-
-    adjustTotal = (isAdding, price) => {
-        const total = this.state.totalPrice;
-
-        if (isAdding) {
-            return this.setState({ totalPrice: total + price });
-        } else {
-            return this.setState({ totalPrice: total - price });
-        }
-    }
-
-    editCartCount = (isAdding) => {
-        if (isAdding) {
-            return this.setState({ cartCount: this.state.cartCount + 1 });
-        } else {
-            return this.setState({ cartCount: (this.state.cartCount - 1) });
-        }
-    }
-
-    removeFromCart = (itemIndex) => {
-        let cart = this.state.cartItems;
-        let removeValue = null;
-
-        cart.forEach((item, i) => {
-            if (item.index === itemIndex){
-                return removeValue = i;
-            }
-        });
-        cart.splice(removeValue, 1);
-        this.setState({ cartItems: cart });
-    }
-
+    
     resetMenu = () => {
-        this.setState({ menuData });
+        this.setState({ menuData: initalData });
     }
 
-    editMenu = (i, field, value) => {
-        let newMenu = this.state.menuData;
-        newMenu.items[i][field] = value;
+    editMenu = (value, i, field) => {
+        // Jank way to make sure im copying the data and not editing the reference of the variable
+        let tmpMenu = JSON.parse(JSON.stringify(this.state.menuData));
+            tmpMenu.items[i][field] = value;
         
-        this.setState({
-            menuData: newMenu
-        });
+        // Waits for state to update before executing price update
+        (async () => {
+            await this.setState({ menuData: tmpMenu });
+            this.adjustTotalPrice();
+        })();
     }
 
-    editCartData = (index, _isRemoving) => {
-        let added = false;
-        let cart = this.state.cartItems;
-        let itemToAdd = this.state.menuData.items[index];
-            itemToAdd.index = index;
-        
-        cart.forEach((item, i) => {
-            if (itemToAdd.index === item.index){
-                if (!_isRemoving){
-                    cart[i].count++; 
-                } else {
-                    cart[i].count--;
-                }
-                
-                added = true;
+    adjustTotalPrice = () => {
+        const data = this.state.menuData.items;
+        let price = 0;
+        console.log('GO');
+        data.forEach(item => {
+            console.log(item.isAvailable);
+            if (("cartCount" in item) && (item.isAvailable)) {
+                price = price + item.cartCount * item.price;
             }
         });
-        
-        if (added){
-            return this.setState({ cartItems: cart });
-        } else {
-            itemToAdd.count = 1;
-            cart.push(itemToAdd);
-            return this.setState({ cartItems: cart });
-        }
+        this.setState({ totalPrice: price });
     }
 
-    menuComp = () => (
+    cartCount = () => {
+        const data = this.state.menuData.items;
+        let count = 0;
+        data.forEach(item => {
+            if (("cartCount" in item) && (item.isAvailable)) {
+                count = count + item.cartCount;
+            }
+        });
+
+        return count;
+    }
+
+    addItemToCart = (itemIndex) => {
+        let newMenuData = this.state.menuData;
+        let item = newMenuData.items[itemIndex];
+
+        // Checks if property is there, adds 1 or sets 1
+        if ("cartCount" in item) {
+            item.cartCount++;
+        } else {
+            item.cartCount = 1;
+        }
+        newMenuData[itemIndex] = item;
+        
+        this.setState({ newMenuData });
+        this.adjustTotalPrice();
+    }
+
+    removeItemFromCart = (itemIndex) => {
+        let newMenuData = this.state.menuData;
+        let item = newMenuData.items[itemIndex];
+
+        item.cartCount--;
+       
+        newMenuData[itemIndex] = item;
+        this.setState({ newMenuData });
+        this.adjustTotalPrice();
+    }
+
+    menuComp = _ => (
         <MenuDisplay 
             data={this.state.menuData}
-            editCart={this.editCartData}
-            editCartCount={this.editCartCount}
-            cartCount={this.state.cartCount}
-            adjustTotal={this.adjustTotal}
-            totalPrice={this.state.totalPrice}/>
+            cartCount={this.cartCount()}
+            totalPrice={this.state.totalPrice}
+            addItemToCart={this.addItemToCart}/>
     );
 
-    adminComp = () => (
+    adminComp = _ => (
         <AdminDisplay 
             data={this.state.menuData}
             editMenu={this.editMenu}
-            resetMenu={this.resetMenu}/>
+            resetMenu={this.resetMenu}
+            recalculatePrice={this.adjustTotalPrice}/>
     );
 
-    cartComp = () => (
+    cartComp = _ => (
         <CartDisplay 
-            data={this.state.cartItems}
-            editCart={this.editCartData}
-            editCartCount={this.editCartCount}
-            cartCount={this.state.cartCount}
-            adjustTotal={this.adjustTotal}
+            data={this.state.menuData}
             totalPrice={this.state.totalPrice}
-            removeFromCart={this.removeFromCart} />
+            cartCount={this.cartCount()}
+            addItemToCart={this.addItemToCart} 
+            removeItemFromCart={this.removeItemFromCart}/>
     )
     
     render(){

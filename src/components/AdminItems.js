@@ -1,38 +1,29 @@
 import React, { Component } from 'react';
 
 class items extends Component{
+    handleChange = (event, index, field) => {
+        this.props.editMenu(event.target.value, index, field);
+    }
+
+    changeAvailability = (index) => {
+        const check = document.getElementById(`${index}C`).checked;
+        this.props.editMenu(!check, index, 'isAvailable');
+    }
+
     render(){
         const list = this.props.data["items"].map((item, index) => {
             return(
-                <div data-index={index} key={index}>
-                    <h1>Edit title: {item.title}</h1>
-                    <input type="text" placeholder={item.title} id={`title${index}`}></input>
-                    <button onClick={() => {
-                            this.props.editMenu(
-                                index, 
-                                "title", 
-                                document.getElementById(`title${index}`).value.toString());
-                    }}>Submit</button>
+                <div className="admin-item" data-index={index} key={index}>
+                    <input type="text" placeholder={item.title} onChange={(event) => this.handleChange(event, index, 'title')}></input>
                     
-                    <h1>Edit description: {item.description}</h1>
-                    <input placeholder={item.description} id={`description${index}`}></input>
-                    <button onClick={() => {
-                            this.props.editMenu(
-                                index, 
-                                "description", 
-                                document.getElementById(`description${index}`).value.toString());
-                    }}>Submit</button>
+                    <textarea placeholder={item.description} onChange={(event) => this.handleChange(event, index, 'description')}></textarea>
         
-                    <h1>Edit price: {`$${item.price.toString()}`}</h1>
-                    <input placeholder={item.price.toString()} id={`price${index}`}></input>
-                    <button onClick={() => {
-                            this.props.editMenu(
-                                index, 
-                                "price", 
-                                document.getElementById(`price${index}`).value);
-                    }}>Submit</button>
+                    <input placeholder={item.price.toString()} onChange={(event) => this.handleChange(event, index, 'price')}></input>
+
+                    <label>Sold Out?
+                        <input type="checkbox" id={`${index}C`} checked={!item.isAvailable} onChange={() => this.changeAvailability(index)} />
+                    </label>
         
-                    <p>------------------</p>
                 </div> 
             )
         });

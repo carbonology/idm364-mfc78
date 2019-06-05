@@ -8,8 +8,8 @@ class AdminDisplay extends Component {
 
         return(
             <>
-                <AdminItems data={this.props.data} editMenu={this.props.editMenu} />
-                <button onClick={this.props.resetMenu}>Reset to default</button>
+                <button className="button button--admin" onClick={this.props.resetMenu}>Reset to default</button>
+                <AdminItems data={this.props.data} editMenu={this.props.editMenu}/>
             </>
         )    
     }
