@@ -1,4 +1,4 @@
-![Logo](https://hungry-yalow-c52c01.netlify.com/#/images/logo.png)
+![Logo](/public/images/logo.png)
 # Welcome to Aunt Jemima's Apocalypse Diner
 
 This project was built using React for IDM364 taught by Phil Sinatra. You can find a link to the project description here: [Project Requirements](https://github.com/philsinatra/IDM364/blob/master/docs/final-project.md).
