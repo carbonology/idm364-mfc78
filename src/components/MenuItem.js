@@ -10,7 +10,7 @@ class MenuItem extends Component {
                             <h1>{item.title}</h1>
                             <p>{`$${item.price.toString()}`}</p>
                         </div>
-                        
+                        <img className="menu-item__img" src={item.image} alt={item.title} />
                         <p className="menu-item__description">{item.description}</p>
                        
                         <button onClick={() => {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import MenuItem from './MenuItem';
-import config from '../config';
-import money from './money';
+import config from '../generic/config';
+import money from '../generic/money';
 
 class MenuDisplay extends Component{
     addToCart = (price, index) => {
@@ -23,7 +23,10 @@ class MenuDisplay extends Component{
         return(
             <>
                 <section className="menu-container">
-                    <MenuItem menu={this.props.data} addToCart={this.addToCart}/>
+                    <h1 className="cart-container__header">Menu</h1>
+                    <div className="menu-container__wrapper">
+                        <MenuItem menu={this.props.data} addToCart={this.addToCart}/>
+                    </div>
                 </section>    
                 
                 <section className="cart-bar-container cart-bar">

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
-import initalData from './menu-data';
+import initalData from '../generic/menu-data';
 import MenuDisplay from './MenuDisplay';
 import AdminDisplay from './AdminDisplay';
 import CartDisplay from './CartDisplay';
@@ -32,9 +32,7 @@ class Menu extends Component {
     adjustTotalPrice = () => {
         const data = this.state.menuData.items;
         let price = 0;
-        console.log('GO');
         data.forEach(item => {
-            console.log(item.isAvailable);
             if (("cartCount" in item) && (item.isAvailable)) {
                 price = price + item.cartCount * item.price;
             }
@@ -81,6 +79,18 @@ class Menu extends Component {
         this.adjustTotalPrice();
     }
 
+    deleteItem = (itemIndex) => {
+        var tmpMenu = JSON.parse(JSON.stringify(this.state.menuData));
+        tmpMenu.items.splice(itemIndex, 1);
+
+        // Waits for state to update before executing price update
+        (async () => {
+            await this.setState({ menuData: tmpMenu });
+            console.log(this.state.menuData);
+            this.adjustTotalPrice();
+        })();
+    }
+
     menuComp = _ => (
         <MenuDisplay 
             data={this.state.menuData}
@@ -94,7 +104,8 @@ class Menu extends Component {
             data={this.state.menuData}
             editMenu={this.editMenu}
             resetMenu={this.resetMenu}
-            recalculatePrice={this.adjustTotalPrice}/>
+            recalculatePrice={this.adjustTotalPrice}
+            deleteItem={this.deleteItem}/>
     );
 
     cartComp = _ => (
