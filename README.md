@@ -7,10 +7,10 @@ The live site can be found here, hosted by Netlify: [https://hungry-yalow-c52c01
 
 ## Commands
 
-`npm run start` : Sets up project for development mode
-`npm run build`: Builds project
-`npm run test`: React-scripts test
-`npm run eject`: React-scripts eject
+- `npm run start` : Sets up project for development mode
+- `npm run build`: Builds project
+- `npm run test`: React-scripts test
+- `npm run eject`: React-scripts eject
 
 ## What I'd do differently 
 
