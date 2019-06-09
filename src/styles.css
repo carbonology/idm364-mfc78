@@ -452,6 +452,10 @@ body {
         flex-direction: column;
     }
 
+    .admin__item-label {
+        margin: 5px 0 0px 0;
+    }
+
     .menu-item {
         min-width: fit-content;
         width: 100%;
